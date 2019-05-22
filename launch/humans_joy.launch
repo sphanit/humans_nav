@@ -1,0 +1,14 @@
+<launch>
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find humans_nav)/config/custom_rosconsole.conf"/>
+ <!-- joy node -->
+  <node respawn="true" pkg="joy" type="joy_node" name="human_joy" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+
+ <!-- Axes -->
+  <param name="control_mode" value="true" type="bool"/>
+  <param name="scale_linear" value="2" type="double"/>
+  <param name="scale_angular" value="2" type="double"/>
+  <node pkg="humans_nav" type="humans_nav" name="humans_sim_node"/>
+</launch>
