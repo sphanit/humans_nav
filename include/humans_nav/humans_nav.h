@@ -11,7 +11,7 @@ public:
   TeleopHumans();
 
 private:
-  void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
+  
   HumanMarker human;
 
   double linear_, angular_;
@@ -19,6 +19,11 @@ private:
   bool dual_mode_;
   ros::Publisher vel_pub_,hum_pub_;
   ros::Subscriber joy_sub_;
+  ros::Timer timer;
+
+  void TimerCallback(const ros::TimerEvent& event);
+
+  void JoyCallback(const sensor_msgs::Joy::ConstPtr& joy);
 
 };
 };

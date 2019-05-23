@@ -20,23 +20,28 @@ TeleopHumans::TeleopHumans():
     linear_ = 1;
   }
 
-  vel_pub_ = nh_.advertise<geometry_msgs::Twist>("human1/motion", 1);
-  hum_pub_ = nh_.advertise<HumanMarker>("human1/marker", 1);
+  vel_pub_ = nh_.advertise<geometry_msgs::Twist>("humans/cmd_vel", 1);
+  hum_pub_ = nh_.advertise<HumanMarker>("humans/marker", 1);
+
+  timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::TimerCallback, this);
 
 
-  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopHumans::joyCallback, this);
+  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopHumans::JoyCallback, this);
   human.id=1;
   human.active=false;
-  hum_pub_.publish(human);
 
 }
 
-void TeleopHumans::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
+void TeleopHumans::JoyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
   geometry_msgs::Twist twist;
   twist.angular.z = a_scale_*joy->axes[angular_];
   twist.linear.x = l_scale_*joy->axes[linear_];
   hum_pub_.publish(human);
   vel_pub_.publish(twist);
+}
+
+void TeleopHumans::TimerCallback(const ros::TimerEvent& event){
+  hum_pub_.publish(human);
 }
 };
