@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   dynamic_reconfigure
+  humans_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -54,6 +55,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    HumanMarker.msg
+   HumanArray.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -109,7 +111,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES humans_nav
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure
+  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs
   #DEPENDS system_lib
 )
 
@@ -122,6 +124,7 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  #${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake
 )
 
 ## Declare a C++ library
@@ -133,7 +136,6 @@ include_directories(
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencfg)
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -148,12 +150,14 @@ set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME ${PROJECT_NAME
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
+#add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_gencfg)
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(${PROJECT_NAME}_node
    ${PROJECT_NAME}
    ${catkin_LIBRARIES}
+   ${Boost_LIBRARIES}
  )
 
 #############
