@@ -2,8 +2,9 @@
 
 namespace humans_nav{
 TeleopHumans::TeleopHumans():
-  linear_(1),
-  angular_(0)
+  linear_x(1),
+  linear_y(0),
+  angular_(3)
 {
   ros::NodeHandle nh_;
 
@@ -15,15 +16,17 @@ TeleopHumans::TeleopHumans():
     geometry_msgs::Twist twist;
     twist_array.twist.push_back(twist);
   }
-  
+
 
   if(dual_mode_){
     angular_ = 3;
-    linear_ = 1;
+    linear_x = 1;
+    linear_y = 0;
   }
   else{
-    angular_ = 0;
-    linear_ = 1;
+    angular_ = 3;
+    linear_x = 1;
+    linear_y = 0;
   }
 
   hum_sub_ = nh_.subscribe<humans_msgs::HumanArray>("/humans/humans", 10, &TeleopHumans::HumansCallback, this);
@@ -46,11 +49,13 @@ void TeleopHumans::JoyCallback(const sensor_msgs::Joy::ConstPtr& joy)
     active_id = human.id - 1;
     if(human.active == true){
       twist_array.twist[active_id].angular.z = a_scale_*joy->axes[angular_];
-      twist_array.twist[active_id].linear.x = l_scale_*joy->axes[linear_];
+      twist_array.twist[active_id].linear.x = l_scale_*joy->axes[linear_x];
+      twist_array.twist[active_id].linear.y = l_scale_*joy->axes[linear_y];
     }
     else{
       twist_array.twist[active_id].angular.z = 0;
-      twist_array.twist[active_id].linear.x = 0; 
+      twist_array.twist[active_id].linear.x = 0;
+      twist_array.twist[active_id].linear.y = 0;
     }
 
   }

@@ -78,6 +78,6 @@ class HumanMorse(object):
 
 
 if __name__ == '__main__':
-    human_morse = HumanMorse(num_hum=2)
+    human_morse = HumanMorse(num_hum=3)
     human_morse.HumanMorsePub()
     

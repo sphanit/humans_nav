@@ -15,11 +15,11 @@ public:
   TeleopHumans();
 
 private:
-  
+
   humans_msgs::HumanArray humans;
   humans_msgs::TwistArray twist_array;
 
-  double linear_, angular_;
+  double linear_x, linear_y, angular_;
   double l_scale_, a_scale_;
   bool dual_mode_;
   ros::Publisher vel_pub_;
