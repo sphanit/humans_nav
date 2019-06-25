@@ -29,7 +29,7 @@ TeleopHumans::TeleopHumans():
     linear_y = 0;
   }
 
-  hum_sub_ = nh_.subscribe<humans_msgs::HumanArray>("/humans/humans", 10, &TeleopHumans::HumansCallback, this);
+  hum_sub_ = nh_.subscribe<humans_msgs::HumanArray>("/humans", 10, &TeleopHumans::HumansCallback, this);
   vel_pub_ = nh_.advertise<humans_msgs::TwistArray>("/humans/cmd_vel", 1);
 
   // timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::TimerCallback, this);
