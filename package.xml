@@ -70,6 +70,8 @@
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>humans_msgs</exec_depend>
   <exec_depend>dynamic_reconfigure</exec_depend>
+  <depend>uwds</depend>
+  <depend>uwds_msgs</depend>
 
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
@@ -77,6 +79,7 @@
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
+    <nodelet plugin="${prefix}/libhumans_nav.xml" />
 
   </export>
 </package>
