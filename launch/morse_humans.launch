@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="output" default="screen"/>
+  <arg name="respawn" default="false"/>
+  <arg name="start_manager" default="false"/>
+  <arg name="start_server" default="false"/>
+  <arg name="nodelet_manager" default="uwds_nodelet_manager"/>
+  <arg name="launch-prefix" default=""/>
+
+  <arg name="publish_on_changes" default="false"/>
+  <arg name="global_frame_id" default="map"/>
+  <arg name="output_world" default="robot/env"/>
+  <!-- <arg name="ressources_folder" default="$(find laas_objects)/res"/> -->
+  <!-- <arg name="marker_ids" default="10 11"/> -->
+  <!-- <arg name="marker_names" default="green_bin blue_bin"/> -->
+  <!-- <arg name="input_frame" default="CameraTop_optical_frame"/> -->
+  <arg name="input_image_topic" default="/naoqi_driver_node/camera/front/image_rect_color"/>
+  <arg name="input_camera_info_topic" default="/naoqi_driver_node/camera/front/camera_info"/>
+
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find humans_nav)/config/custom_rosconsole.conf"/>
+
+ <!-- joy node -->
+  <node respawn="true" pkg="joy" type="joy_node" name="human_joy" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.22" />
+  </node>
+
+ <!-- Axes -->
+  <param name="control_mode" value="true" type="bool"/>
+  <param name="scale_linear" value="2" type="double"/>
+  <param name="scale_angular" value="2" type="double"/>
+  <node pkg="humans_nav" type="humans_nav" name="humans_sim_node" output="screen" required="true" />
+  <node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen">
+  </node>
+
+  <!-- <node name="$(arg nodelet_manager)"
+        pkg="nodelet" type="nodelet"
+        args="manager"
+        respawn="$(arg respawn)"
+        output="$(arg output)"
+        launch-prefix="$(arg launch-prefix)"
+        if="$(arg start_manager)"/> -->
+
+  <!-- <node name="uwds_server"
+        pkg="nodelet" type="nodelet"
+        args="load uwds/UwdsServerNodelet $(arg nodelet_manager)"
+        respawn="$(arg respawn)"
+        output="$(arg output)"
+        launch-prefix="$(arg launch-prefix)"
+        if="$(arg start_server)"/> -->
+
+  <node name="morse_humans_provider"
+        pkg="nodelet" type="nodelet"
+        args="load humans_nav/MorseHumansProvider $(arg nodelet_manager)"
+        output="$(arg output)"
+        launch-prefix="$(arg launch-prefix)">
+    <rosparam subst_value="true">
+      global_frame_id: $(arg global_frame_id)
+      output_world: $(arg output_world)
+      verbose : false
+    </rosparam>
+  </node>
+
+</launch>

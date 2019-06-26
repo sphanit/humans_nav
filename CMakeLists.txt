@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   humans_msgs
   uwds
   uwds_msgs
+  nodelet
 )
 
 ## System dependencies are found with CMake's conventions
@@ -113,7 +114,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES humans_nav
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs uwds uwds_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs uwds uwds_msgs nodelet
   #DEPENDS system_lib
 )
 

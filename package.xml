@@ -72,6 +72,7 @@
   <exec_depend>dynamic_reconfigure</exec_depend>
   <depend>uwds</depend>
   <depend>uwds_msgs</depend>
+  <depend>nodelet</depend>
 
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>

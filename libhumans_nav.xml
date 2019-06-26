@@ -1,0 +1,7 @@
+<library path="lib/libhumans_nav">
+    <class name="humans_nav/MorseHumansProvider"
+         type="humans_nav::MorseHumansProvider"
+         base_class_type="nodelet::Nodelet">
+    <description>This is Morse simualted Humans Provider</description>
+  </class>
+</library>
