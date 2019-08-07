@@ -13,7 +13,7 @@ namespace humans_nav
 
     for(int i=1;i<=3;i++){
       Node node;
-      string name = "Human" + to_string(i);
+      string name = "human" + to_string(i);
       node.name = name;
       node.id = NEW_UUID;
       human_node.push_back(node);

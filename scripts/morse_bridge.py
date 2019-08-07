@@ -26,7 +26,7 @@ class HumanMorse(object):
     def HumanMorsePub(self):
 
         rospy.init_node('HumanMorseBridge', anonymous=True)
-        rate = rospy.Rate(10)
+	#rate = rospy.Rate(40)
         hum_marker_sub = []
 
         for human_id in range(1,self.num_hum+1):
@@ -71,5 +71,5 @@ class HumanMorse(object):
 
 
 if __name__ == '__main__':
-    human_morse = HumanMorse(num_hum=3)
+    human_morse = HumanMorse(num_hum=1)
     human_morse.HumanMorsePub()

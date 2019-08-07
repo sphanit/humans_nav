@@ -1,0 +1,1694 @@
+... logging to /home/ptsingaman/.ros/log/5666d412-9ced-11e9-9d9e-54bf648dcde8/roslaunch-happy-13154.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/ptsingaman/MuMMER_Nav/src/morse_pr2_2dnav/launch/pr2_hol.launch
+[1mstarted roslaunch server http://happy:41331/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /amcl/aser_z_short: 0.05
+ * /amcl/base_frame_id: base_footprint
+ * /amcl/global_frame_id: map
+ * /amcl/gui_publish_rate: 10.0
+ * /amcl/initial_pose_a: 0.0
+ * /amcl/initial_pose_x: 2.0
+ * /amcl/initial_pose_y: 2.0
+ * /amcl/kld_err: 0.05
+ * /amcl/kld_z: 0.99
+ * /amcl/laser_lambda_short: 0.1
+ * /amcl/laser_likelihood_max_dist: 2.0
+ * /amcl/laser_max_beams: 60
+ * /amcl/laser_max_range: 12.0
+ * /amcl/laser_model_type: likelihood_field
+ * /amcl/laser_sigma_hit: 0.2
+ * /amcl/laser_z_hit: 0.5
+ * /amcl/laser_z_max: 0.05
+ * /amcl/laser_z_rand: 0.5
+ * /amcl/max_particles: 2000
+ * /amcl/min_particles: 500
+ * /amcl/odom_alpha1: 0.2
+ * /amcl/odom_alpha2: 0.2
+ * /amcl/odom_alpha3: 0.2
+ * /amcl/odom_alpha4: 0.2
+ * /amcl/odom_alpha5: 0.1
+ * /amcl/odom_frame_id: odom
+ * /amcl/odom_model_type: omni
+ * /amcl/recovery_alpha_fast: 0.1
+ * /amcl/recovery_alpha_slow: 0.001
+ * /amcl/resample_interval: 1
+ * /amcl/transform_tolerance: 1.0
+ * /amcl/update_min_a: 0.2
+ * /amcl/update_min_d: 0.25
+ * /amcl/use_map_topic: True
+ * /map_server/frame_id: map
+ * /move_base_node/TebLocalPlannerROS/acc_lim_theta: 0.4
+ * /move_base_node/TebLocalPlannerROS/acc_lim_x: 0.3
+ * /move_base_node/TebLocalPlannerROS/acc_lim_y: 0.3
+ * /move_base_node/TebLocalPlannerROS/allow_init_with_backwards_motion: True
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/cluster_max_distance: 0.4
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/cluster_min_pts: 2
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/convex_hull_min_pt_separation: 0.1
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_convert_outlier_pts: True
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_filter_remaining_outlier_pts: False
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_inlier_distance: 0.15
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_min_inliers: 10
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_no_iterations: 1500
+ * /move_base_node/TebLocalPlannerROS/costmap_converter/CostmapToLinesDBSRANSAC/ransac_remainig_outliers: 3
+ * /move_base_node/TebLocalPlannerROS/costmap_converter_plugin: costmap_converter...
+ * /move_base_node/TebLocalPlannerROS/costmap_converter_rate: 5
+ * /move_base_node/TebLocalPlannerROS/costmap_converter_spin_thread: True
+ * /move_base_node/TebLocalPlannerROS/costmap_obstacles_behind_robot_dist: 0.5
+ * /move_base_node/TebLocalPlannerROS/dt_hysteresis: 0.1
+ * /move_base_node/TebLocalPlannerROS/dt_ref: 0.3
+ * /move_base_node/TebLocalPlannerROS/enable_homotopy_class_planning: True
+ * /move_base_node/TebLocalPlannerROS/enable_multithreading: True
+ * /move_base_node/TebLocalPlannerROS/feasibility_check_no_poses: 5
+ * /move_base_node/TebLocalPlannerROS/footprint_model/front_offset: 0.2
+ * /move_base_node/TebLocalPlannerROS/footprint_model/front_radius: 0.2
+ * /move_base_node/TebLocalPlannerROS/footprint_model/line_end: [0.3, 0.0]
+ * /move_base_node/TebLocalPlannerROS/footprint_model/line_start: [-0.3, 0.0]
+ * /move_base_node/TebLocalPlannerROS/footprint_model/radius: 0.34
+ * /move_base_node/TebLocalPlannerROS/footprint_model/rear_offset: 0.2
+ * /move_base_node/TebLocalPlannerROS/footprint_model/rear_radius: 0.2
+ * /move_base_node/TebLocalPlannerROS/footprint_model/type: circular
+Number of points is 29
+inf
+14.4589
+9.21928
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+4.07934
+inf
+[0m[ INFO] [1562087935.515105742, 47.477515347]: Human added ![0m
+called _ jdj
+Number of points is 29
+23.136
+16.2935
+9.21928
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+2.87833
+inf
+[0m[ INFO] [1562087935.648351590, 47.610848681]: Human added ![0m
+called _ jdj
+Number of points is 29
+inf
+18.6535
+9.21928
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+2.87833
+inf
+[0m[ INFO] [1562087935.757392200, 47.727515347]: Human added ![0m
+called _ jdj
+Number of points is 29
+inf
+20.121
+9.21928
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+2.2246
+inf
+[0m[ INFO] [1562087935.883506320, 47.860848681]: Human added ![0m
+called _ jdj
+Number of points is 28
+inf
+9.62482
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+2.2246
+inf
+[0m[ INFO] [1562087936.010646430, 47.977515347]: Human added ![0m
+called _ jdj
+Number of points is 28
+12.0635
+11.2174
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.81314
+inf
+[0m[ INFO] [1562087936.133437267, 48.110848681]: Human added ![0m
+called _ jdj
+Number of points is 28
+17.949
+13.4618
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.53023
+inf
+[0m[ INFO] [1562087936.264467465, 48.227515347]: Human added ![0m
+called _ jdj
+Number of points is 28
+35.1695
+14.8522
+6.90787
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.53023
+inf
+[0m[ INFO] [1562087936.383082824, 48.360848681]: Human added ![0m
+called _ jdj
+Number of points is 27
+62.0334
+7.70743
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.32374
+inf
+[0m[ INFO] [1562087936.515321616, 48.477515347]: Human added ![0m
+called _ jdj
+Number of points is 27
+11.3475
+8.55351
+5.75077
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.16637
+inf
+[0m[ INFO] [1562087936.633972747, 48.610848681]: Human added ![0m
+called _ jdj
+Number of points is 26
+15.6755
+6.29449
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+1.04245
+inf
+[0m[ INFO] [1562087936.758204944, 48.727515347]: Human added ![0m
+called _ jdj
+Number of points is 26
+7.12978
+7.4978
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.859786
+inf
+[0m[ INFO] [1562087936.883018827, 48.860848681]: Human added ![0m
+called _ jdj
+Number of points is 26
+10.8843
+9.07286
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.790529
+inf
+[0m[ INFO] [1562087937.009544762, 48.977515347]: Human added ![0m
+called _ jdj
+Number of points is 26
+21.5096
+10.0003
+5.14045
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.7316
+inf
+[0m[ INFO] [1562087937.132790696, 49.110848681]: Human added ![0m
+called _ jdj
+Number of points is 25
+38.0034
+5.88144
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.735976
+inf
+[0m[ INFO] [1562087937.264612539, 49.227515347]: Human added ![0m
+called _ jdj
+Number of points is 25
+7.84015
+6.77069
+4.7252
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.639974
+inf
+[0m[ INFO] [1562087937.383987149, 49.360848681]: Human added ![0m
+called _ jdj
+Number of points is 24
+11.7213
+3.96163
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.600799
+inf
+[0m[ INFO] [1562087937.508985400, 49.477515347]: Human added ![0m
+called _ jdj
+Number of points is 24
+3.65964
+4.94628
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.507604
+inf
+[0m[ INFO] [1562087937.648216031, 49.610848681]: Human added ![0m
+called _ jdj
+Number of points is 24
+5.02859
+6.55527
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.439453
+0
+[0m[ INFO] [1562087937.757588227, 49.727515347]: Human added ![0m
+called _ jdj
+Number of points is 24
+9.58238
+7.89267
+4.82613
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.411406
+0
+[0m[ INFO] [1562087937.883253515, 49.860848681]: Human added ![0m
+called _ jdj
+Number of points is 23
+18.4461
+4.18418
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.411406
+0
+[0m[ INFO] [1562087938.014809900, 49.977515347]: Human added ![0m
+called _ jdj
+Number of points is 23
+3.82969
+5.05196
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.365402
+0
+[0m[ INFO] [1562087938.133481728, 50.110848681]: Human added ![0m
+called _ jdj
+Number of points is 23
+5.2936
+6.6312
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.340061
+0
+[0m[ INFO] [1562087938.264499047, 50.227515347]: Human added ![0m
+called _ jdj
+Number of points is 23
+10.0749
+7.91832
+4.80727
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.318012
+0
+[0m[ INFO] [1562087938.383208013, 50.360848681]: Human added ![0m
+called _ jdj
+Number of points is 22
+19.3421
+4.15467
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.318012
+0
+[0m[ INFO] [1562087938.515601496, 50.477515347]: Human added ![0m
+called _ jdj
+Number of points is 22
+3.74479
+5.39291
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.291638
+0
+[0m[ INFO] [1562087938.648558410, 50.610848681]: Human added ![0m
+called _ jdj
+Number of points is 22
+6.06009
+6.4735
+4.8929
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.275284
+0
+[0m[ INFO] [1562087938.757349594, 50.727515347]: Human added ![0m
+called _ jdj
+Number of points is 21
+9.34914
+3.95077
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.267778
+0
+[0m[ INFO] [1562087938.908170560, 50.860848681]: Human added ![0m
+called _ jdj
+Number of points is 21
+3.37236
+5.26253
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.247534
+0
+[0m[ INFO] [1562087939.008976401, 50.977515347]: Human added ![0m
+called _ jdj
+Number of points is 21
+5.50479
+6.78616
+5.36745
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.23566
+0
+[0m[ INFO] [1562087939.148082667, 51.110848681]: Human added ![0m
+called _ jdj
+Number of points is 20
+9.94867
+4.30892
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.224875
+0
+[0m[ INFO] [1562087939.258467551, 51.227515347]: Human added ![0m
+called _ jdj
+Number of points is 20
+3.55843
+5.39771
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.213635
+0
+[0m[ INFO] [1562087939.382418224, 51.360848681]: Human added ![0m
+called _ jdj
+Number of points is 20
+5.04716
+7.09972
+7.07346
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.204729
+0
+[0m[ INFO] [1562087939.510173047, 51.477515347]: Human added ![0m
+called _ jdj
+Number of points is 19
+8.72251
+5.25893
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.20055
+0
+[0m[ INFO] [1562087939.633025357, 51.610848681]: Human added ![0m
+called _ jdj
+Number of points is 19
+3.92098
+7.25432
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.192683
+0
+[0m[ INFO] [1562087939.756956340, 51.727515347]: Human added ![0m
+called _ jdj
+Number of points is 19
+6.17987
+9.93909
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.188977
+0
+[0m[ INFO] [1562087939.883140764, 51.860848681]: Human added ![0m
+called _ jdj
+Number of points is 19
+10.4215
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.185411
+0
+[0m[ INFO] [1562087940.010134926, 51.977515347]: Human added ![0m
+called _ jdj
+Number of points is 19
+19.7261
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.181977
+0
+[0m[ INFO] [1562087940.148202751, 52.110848681]: Human added ![0m
+called _ jdj
+Number of points is 18
+34.5349
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.181977
+0
+[0m[ INFO] [1562087940.256179677, 52.227515347]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.177995
+0
+[0m[ INFO] [1562087940.383668800, 52.360848681]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.174828
+0
+[0m[ INFO] [1562087940.508914679, 52.477515347]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087940.647901393, 52.610848681]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087940.756832374, 52.727515347]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087940.883566138, 52.860848681]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087941.008643627, 52.977515347]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087941.155992702, 53.110848681]: Human added ![0m
+called _ jdj
+Number of points is 18
+inf
+inf
+5.85927
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087941.266728378, 53.227515347]: Human added ![0m
+called _ jdj
+Number of points is 17
+inf
+5.52947
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.171772
+0
+[0m[ INFO] [1562087941.383863832, 53.360848681]: Human added ![0m
+called _ jdj
+Number of points is 17
+inf
+6.54039
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.168821
+0
+[0m[ INFO] [1562087941.515360315, 53.477515347]: Human added ![0m
+called _ jdj
+Number of points is 17
+inf
+7.76063
+5.19465
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.16597
+0
+[0m[ INFO] [1562087941.634544705, 53.610848681]: Human added ![0m
+called _ jdj
+Number of points is 16
+inf
+5.43618
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.163214
+0
+[0m[ INFO] [1562087941.757575547, 53.727515347]: Human added ![0m
+called _ jdj
+Number of points is 16
+5.92187
+6.52841
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.160548
+0
+[0m[ INFO] [1562087941.898432608, 53.860848681]: Human added ![0m
+called _ jdj
+Number of points is 16
+8.97628
+7.89407
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.157968
+0
+[0m[ INFO] [1562087942.008592038, 53.977515347]: Human added ![0m
+called _ jdj
+Number of points is 16
+16.6565
+8.91477
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.15547
+0
+[0m[ INFO] [1562087942.133480307, 54.110848681]: Human added ![0m
+called _ jdj
+Number of points is 16
+31.6992
+9.49614
+5.12202
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.15547
+0
+[0m[ INFO] [1562087942.265106584, 54.227515347]: Human added ![0m
+called _ jdj
+Number of points is 15
+55.5934
+6.0475
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.15547
+0
+[0m[ INFO] [1562087942.383499220, 54.360848681]: Human added ![0m
+called _ jdj
+Number of points is 15
+6.81983
+7.68191
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.153049
+0
+[0m[ INFO] [1562087942.509335160, 54.477515347]: Human added ![0m
+called _ jdj
+Number of points is 15
+9.40981
+inf
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.152552
+0
+[0m[ INFO] [1562087942.633418061, 54.610848681]: Human added ![0m
+called _ jdj
+Number of points is 15
+17.9555
+inf
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.152552
+0
+[0m[ INFO] [1562087942.759305001, 54.727515347]: Human added ![0m
+called _ jdj
+Number of points is 15
+34.8692
+inf
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.152552
+0
+[0m[ INFO] [1562087942.882842593, 54.860848681]: Human added ![0m
+called _ jdj
+Number of points is 14
+61.3975
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.152552
+0
+[0m[ INFO] [1562087943.014666220, 54.977515347]: Human added ![0m
+called _ jdj
+Number of points is 14
+inf
+inf
+5.33718
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.15022
+0
+[0m[ INFO] [1562087943.158491269, 55.127515347]: Human added ![0m
+called _ jdj
+Number of points is 13
+inf
+4.46877
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.145766
+0
+[0m[ INFO] [1562087943.257618767, 55.227515347]: Human added ![0m
+called _ jdj
+Number of points[0m[ INFO] [1562087886.762394109]: Subscribed to map topic.[0m
+[0m[ INFO] [1562087889.265222177, 1.227515347]: Received a 300 X 600 map @ 0.050 m/pix
+[0m
+[0m[ INFO] [1562087889.270367117, 1.227515347]: Initializing likelihood field model; this can take some time on large maps...[0m
+[0m[ INFO] [1562087889.297077810, 1.260848681]: Done initializing likelihood field model.[0m
+ is 13
+inf
+5.21209
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.143636
+inf
+[0m[ INFO] [1562087943.382995172, 55.360848681]: Human added ![0m
+called _ jdj
+Number of points is 13
+inf
+6.69674
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.139558
+inf
+[0m[ INFO] [1562087943.508908551, 55.477515347]: Human added ![0m
+called _ jdj
+Number of points is 13
+inf
+7.78483
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.137605
+inf
+[0m[ INFO] [1562087943.647736823, 55.610848681]: Human added ![0m
+called _ jdj
+Number of points is 13
+inf
+8.59047
+5.02913
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.137605
+inf
+[0m[ INFO] [1562087943.756979774, 55.727515347]: Human added ![0m
+called _ jdj
+Number of points is 12
+inf
+4.37
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.135706
+inf
+[0m[ INFO] [1562087943.883114898, 55.860848681]: Human added ![0m
+called _ jdj
+Number of points is 12
+3.99694
+5.88045
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.133858
+inf
+[0m[ INFO] [1562087944.011527400, 55.977515347]: Human added ![0m
+called _ jdj
+Number of points is 12
+6.42605
+inf
+inf
+3.84111
+3.23546
+2.52241
+3.9668
+3.48106
+4.57391
+4.33096
+0.131702
+inf
