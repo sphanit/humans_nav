@@ -16,9 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   dynamic_reconfigure
   humans_msgs
-  uwds
-  uwds_msgs
-  nodelet
+  hanp_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -114,7 +112,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES humans_nav
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs uwds uwds_msgs nodelet
+  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs hanp_msgs
   #DEPENDS system_lib
 )
 
@@ -133,7 +131,6 @@ include_directories(
 ## Declare a C++ library
  add_library(${PROJECT_NAME}
    src/humans_nav.cpp
-   src/morse_humans_provider.cpp
  )
 
 ## Add cmake target dependencies of the library

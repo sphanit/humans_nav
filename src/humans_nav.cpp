@@ -1,4 +1,9 @@
 #include "humans_nav/humans_nav.h"
+#include <unistd.h>
+#include <angles/angles.h>
+// #include <hanp_msgs/TrackedHumans.h>
+// #include <hanp_msgs/TrackedSegmentType.h>
+// #define DEFAUTL_SEGMENT_TYPE hanp_msgs::TrackedSegmentType::TORSO
 
 namespace humans_nav{
 TeleopHumans::TeleopHumans():
@@ -16,7 +21,7 @@ TeleopHumans::TeleopHumans():
     geometry_msgs::Twist twist;
     twist_array.twist.push_back(twist);
   }
-
+  zero_twist_array=twist_array;
 
   if(dual_mode_){
     angular_ = 3;
@@ -28,14 +33,22 @@ TeleopHumans::TeleopHumans():
     linear_x = 1;
     linear_y = 0;
   }
+  start_=true;
+  goal_reached_=true;
+  reset_time =true;
+  got_external_trajs = false;
+  index=0;
 
-  hum_sub_ = nh_.subscribe<humans_msgs::HumanArray>("/humans", 10, &TeleopHumans::HumansCallback, this);
+  hum_sub_ = nh_.subscribe("/humans", 1, &TeleopHumans::HumansCallback, this);
   vel_pub_ = nh_.advertise<humans_msgs::TwistArray>("/humans/cmd_vel", 1);
 
-  // timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::TimerCallback, this);
+  timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::controller, this);
+  set_goal = nh_.advertiseService("setGoalHuman", &TeleopHumans::setGoal, this);
 
 
-  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopHumans::JoyCallback, this);
+  joy_sub_ = nh_.subscribe("joy", 1, &TeleopHumans::JoyCallback, this);
+  external_traj_sub_ = nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_local_trajs", 1, &TeleopHumans::controllerPathsCB, this);
+  global_path_sub_= nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_global_plans", 1, &TeleopHumans::globalPlannerPathsCB, this);
 
 
 
@@ -59,7 +72,7 @@ void TeleopHumans::JoyCallback(const sensor_msgs::Joy::ConstPtr& joy)
     }
 
   }
-
+  joy_ = true;
   vel_pub_.publish(twist_array);
 }
 
@@ -69,5 +82,109 @@ void TeleopHumans::JoyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 void TeleopHumans::HumansCallback(const humans_msgs::HumanArray::ConstPtr & Humans){
   humans = *Humans;
 }
+
+void TeleopHumans::controllerPathsCB(const hanp_msgs::HumanTrajectoryArrayConstPtr traj_array)
+{
+  got_external_trajs =  true;
+  external_trajs_ = traj_array;
+  last_trajs_ = *external_trajs_;
+}
+
+void TeleopHumans::globalPlannerPathsCB(const hanp_msgs::HumanPathArrayConstPtr path_array){
+  global_paths_ = path_array;
+  global_goal = global_paths_->paths.back().path.poses.back();
+}
+
+double TeleopHumans::normalize_theta(double theta)
+ {
+   if (theta >= -M_PI && theta < M_PI)
+     return theta;
+
+   double multiplier = floor(theta / (2*M_PI));
+   theta = theta - multiplier*2*M_PI;
+   if (theta >= M_PI)
+     theta -= 2*M_PI;
+   if (theta < -M_PI)
+     theta += 2*M_PI;
+   return theta;
+ }
+
+ void TeleopHumans::controller(const ros::TimerEvent& event){
+
+   int active_id = 1;
+   double vel_sum=0;
+   double dx;
+   double dy;
+   double delta_orient;
+
+   for(auto & human : humans.humans){
+     active_id = human.id - 1;
+     double vel_x = 0.0;
+     double vel_y = 0.0;
+     double vel_z = 0.0;
+     if(human.active == true){
+     for(auto & traj : last_trajs_.trajectories){
+       dx = global_goal.pose.position.x - human.pose.position.x;
+       dy = global_goal.pose.position.y - human.pose.position.y;
+       delta_orient = normalize_theta(tf::getYaw(global_goal.pose.orientation)-tf::getYaw(human.pose.orientation));
+       // double sum_vel = fabs(traj.trajectory.points[1].velocity.linear.x)+fabs(traj.trajectory.points[1].velocity.linear.y)+fabs(traj.trajectory.points[1].velocity.angular.z);
+       std::cout << "traj.trajectory.points.size() " <<traj.trajectory.points.size()<< '\n';
+       std::cout << "goal_reached_ " <<goal_reached_<< '\n';
+
+       if((((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.1)||
+              (traj.trajectory.points.begin()==traj.trajectory.points.end())) && !goal_reached_) ){
+            reset_time=true;
+            got_external_trajs = false;
+            goal_reached_ = true;
+            last_trajs_.trajectories.clear();
+            ROS_INFO("Goal Reached!");
+            twist_array.twist[active_id].angular.z = vel_z;
+            twist_array.twist[active_id].linear.x = vel_x;
+            twist_array.twist[active_id].linear.y = vel_y;
+            index = 0;
+             break;
+           }
+
+         if(goal_reached_){
+           last_trajs_.trajectories.clear();
+           break;
+         }
+
+         if(traj.trajectory.points.size()>1){
+             vel_x = traj.trajectory.points[1].velocity.linear.x;
+             vel_y = traj.trajectory.points[1].velocity.linear.y;
+             vel_z = traj.trajectory.points[1].velocity.angular.z;
+          }
+          twist_array.twist[active_id].angular.z = vel_z;
+          twist_array.twist[active_id].linear.x = vel_x;
+          twist_array.twist[active_id].linear.y = vel_y;
+          if(traj.trajectory.points.begin()!=traj.trajectory.points.end())
+            traj.trajectory.points.erase(traj.trajectory.points.begin());
+        }
+     }
+     vel_sum=fabs(vel_x)+fabs(vel_y)+fabs(vel_z);
+
+   }
+   if(!goal_reached_ && vel_sum<0.00001){
+     twist_array.twist[active_id].angular.z = 0;
+     twist_array.twist[active_id].linear.x = 0.3;
+     twist_array.twist[active_id].linear.y = 0;
+   }
+   if(!joy_){
+     vel_pub_.publish(twist_array);
+     // std::cout << "I am in if" << '\n';
+   }
+   joy_=false;
+
+ }
+
+ bool TeleopHumans::setGoal(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res){
+    std::string message = req.data ? "Goal set" : "Goal not set";
+    res.success = true;
+    res.message = message;
+    goal_reached_ = !req.data;
+    ROS_INFO("Goal set!");
+
+ }
 
 };

@@ -11,7 +11,9 @@
   <param name="control_mode" value="true" type="bool"/>
   <param name="scale_linear" value="2" type="double"/>
   <param name="scale_angular" value="2" type="double"/>
-  <node pkg="humans_nav" type="humans_nav" name="humans_sim_node" output="screen" required="true" />
+  <node pkg="humans_nav" type="humans_nav" name="humans_sim_node" output="screen" required="true">
+    <!--remap from="/humans_sim_node/external_human_plans" to="/move_base_node/TebLocalPlannerROS/human_local_trajs"/-->
+  </node>
   <node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen">
   <!-- <arg name="num_hum" value="3"> -->
   </node>
