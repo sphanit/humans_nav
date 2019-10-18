@@ -28,12 +28,12 @@ private:
   humans_msgs::HumanArray humans;
   humans_msgs::TwistArray twist_array;
   humans_msgs::TwistArray zero_twist_array;
-  hanp_msgs::HumanPathArray::ConstPtr global_paths_;
+  hanp_msgs::HumanPathArray global_paths_;
   geometry_msgs::PoseStamped global_goal;
 
   double linear_x, linear_y, angular_;
   double l_scale_, a_scale_;
-  bool dual_mode_,joy_;
+  bool dual_mode_,joy_, use_joy;
   bool start_,goal_reached_,reset_time;
   bool got_external_trajs,zeros_published;
   ros::Publisher vel_pub_;
@@ -42,6 +42,8 @@ private:
   ros::Timer timer;
   ros::Time last_calc_time_;
   int index,last_index;
+  dynamic_reconfigure::Server<HumanConfig> server;
+  dynamic_reconfigure::Server<HumanConfig>::CallbackType f;
   // dynamic_reconfigure::Server<humans_nav::HumanConfig> *dsrv_;
 
   // void TimerCallback(const ros::TimerEvent& event);
@@ -55,7 +57,10 @@ private:
 
   void HumansCallback(const humans_msgs::HumanArray::ConstPtr & Humans);
 
+  void getVelocity(geometry_msgs::Twist &twist);
+
   bool setGoal(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res);
+  void reconfigureCB(HumanConfig &config, uint32_t level);
 
   // void callback(humans_nav::HumanConfig &config, uint32_t level);
 

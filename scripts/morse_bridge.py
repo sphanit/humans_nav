@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import rospy
+import time
 from humans_msgs.msg import TwistArray
 from humans_msgs.msg import HumanArray
 from humans_msgs.msg import HumanMarkerStamped
@@ -53,6 +54,7 @@ class HumanMorse(object):
         rospy.spin()
 
     def HumansCmdVelCB(self,msg):
+        # time.sleep(0.1)
         self.hum_cmd_vel = msg
         active_human = 0
         for human in self.humans.humans:
