@@ -17,6 +17,10 @@ find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   humans_msgs
   hanp_msgs
+  tf
+  costmap_2d
+  nav_core
+  pluginlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,14 +61,14 @@ add_message_files(
    FILES
    HumanMarker.msg
    HumanArray.msg
+   HumanPose.msg
  )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+   FILES
+   HumansNavGoal.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -76,8 +80,8 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   geometry_msgs   
-   #sensor_msgs   
+   geometry_msgs
+   #sensor_msgs
    std_msgs
  )
 
@@ -112,7 +116,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES humans_nav
-  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs hanp_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs std_msgs dynamic_reconfigure humans_msgs hanp_msgs costmap_2d nav_core pluginlib tf
   #DEPENDS system_lib
 )
 

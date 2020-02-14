@@ -1,0 +1,4 @@
+humans_nav/HumanPose[]       goals
+---
+bool                         success
+string                       message

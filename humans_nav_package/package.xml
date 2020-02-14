@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>humans_nav_package</name>
+
+  <version>0.1.0</version>
+
+  <description>A 2D multi-human simulator with multi-goal planner based on MORSE</description>
+
+  <maintainer email="ptsingaman@laas.fr">PhaniTeja S</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+     <metapackage/>
+  </export>
+</package>

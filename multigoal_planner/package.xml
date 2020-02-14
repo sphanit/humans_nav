@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<package>
+  <name>multigoal_planner</name>
+
+  <version>0.2.0</version>
+
+  <description>The multigoal_planner package</description>
+
+  <maintainer email="ptsingaman@laas.fr">PhaniTeja S</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>costmap_2d</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>cmake_modules</build_depend>
+  <build_depend>global_planner</build_depend>
+  <build_depend>hanp_msgs</build_depend>
+  <build_depend>humans_nav</build_depend>
+  <build_depend>nav_core</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>pluginlib</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>tf</build_depend>
+
+
+  <run_depend>costmap_2d</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>global_planner</run_depend>
+  <run_depend>hanp_msgs</run_depend>
+  <run_depend>humans_nav</run_depend>
+  <run_depend>nav_core</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>pluginlib</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>tf</run_depend>
+
+
+  <export>
+        <move_humans plugin="${prefix}/planner_plugin.xml" />
+  </export>
+</package>
