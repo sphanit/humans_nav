@@ -36,17 +36,21 @@ public:
 
 private:
   tf2_ros::Buffer &tf2_;
+  double count;
+  double ctrl_time,prev_control_time;
   double planner_frequency_;
   costmap_2d::Costmap2DROS *planner_costmap_ros_;
   boost::shared_ptr<humans_nav::PlannerInterface> planner_;
   pluginlib::ClassLoader<humans_nav::PlannerInterface> planner_loader_;
   humans_nav::map_pose_vectors *planner_plans_,*latest_plans_;
+  humans_nav::pose_vector current_plan;
   bool new_global_plans_, p_freq_change_, run_planner_;
-  boost::mutex planner_mutex_, external_trajs_mutex_, external_vels_mutex_;
+  boost::mutex planner_mutex_, external_trajs_mutex_, external_vels_mutex_, controller_mutex_;
   boost::condition_variable planner_cond_;
+  boost::condition_variable controller_cond_;
   humans_nav::map_pose planner_starts_, planner_goals_;
   humans_nav::map_pose_vector planner_sub_goals_;
-  boost::thread *planner_thread_;
+  boost::thread *planner_thread_, *controller_thread_;
 
   humans_msgs::HumanArray humans;
   humans_msgs::TwistArray twist_array;
@@ -62,7 +66,7 @@ private:
   ros::Publisher vel_pub_;
   ros::Subscriber joy_sub_,hum_sub_,external_traj_sub_, global_path_sub_;
   ros::ServiceServer set_goal;
-  ros::Timer timer;
+  ros::Timer timer,wake_timer;
   ros::Time last_calc_time_;
   int index,last_index;
 
@@ -88,8 +92,12 @@ private:
   void reconfigureCB(HumanConfig &config, uint32_t level);
 
   void planThread();
+  // void controlThread();
 
   void wakePlanner(const ros::TimerEvent &event);
+  void wake_up(const ros::TimerEvent &event);
+  geometry_msgs::Twist get_velocity_human(geometry_msgs::Pose pose, geometry_msgs::Pose h_pose);
+  // void wakeController(const ros::TimerEvent &event);
 
   template <typename T>
   bool loadPlugin(const std::string plugin_name, boost::shared_ptr<T> &plugin,

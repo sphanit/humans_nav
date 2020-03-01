@@ -40,6 +40,6 @@
 
 
   <export>
-        <move_humans plugin="${prefix}/planner_plugin.xml" />
+        <humans_nav plugin="${prefix}/planner_plugin.xml" />
   </export>
 </package>

@@ -11,7 +11,7 @@
 namespace humans_nav{
 TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
                           tf2_(tf2),planner_costmap_ros_(NULL),
-                          planner_loader_("move_humans", "move_humans::PlannerInterface"),
+                          planner_loader_("humans_nav", "humans_nav::PlannerInterface"),
                           planner_plans_(NULL), latest_plans_(NULL),run_planner_(false),
                           p_freq_change_(false), linear_x(1), linear_y(0), angular_(3)
 
@@ -20,7 +20,7 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
   tf2_ros::TransformListener tf2_lisn(tf2_);
 
   std::string planner_name;
-  nh_.param("planner", planner_name, std::string("move_humans/PlannerInterface"));
+  nh_.param("planner", planner_name, std::string("multigoal_planner/MultiGoalPlanner"));
   nh_.param("planner_frequency", planner_frequency_, 0.0);
   nh_.param("control_mode", dual_mode_, dual_mode_);
   nh_.param("scale_angular", a_scale_, a_scale_);
@@ -40,6 +40,7 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
   planner_costmap_ros_->start();
 
   planner_thread_ = new boost::thread(boost::bind(&TeleopHumans::planThread, this));
+  // loadPlugin<humans_nav::PlannerInterface>;
 
   for(int num=0;num<3;num++){
     geometry_msgs::Twist twist;
@@ -57,16 +58,21 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
     linear_x = 1;
     linear_y = 0;
   }
-  start_=true;
+  count = 0.0;
+  start_=false;
   goal_reached_=true;
   reset_time =true;
   got_external_trajs = false;
   index=0;
+  planner_frequency_ = 0.0;
+  ctrl_time=0.0;
+  prev_control_time=0.0;
 
   hum_sub_ = nh_.subscribe("/humans", 1, &TeleopHumans::HumansCallback, this);
   vel_pub_ = nh_.advertise<humans_msgs::TwistArray>("/humans/cmd_vel", 1);
 
   timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::controller, this);
+  // wake_timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::controller, this);
   set_goal = nh_.advertiseService("setGoalHuman", &TeleopHumans::setGoal, this);
 
   // nh_.param("use_joy", use_joy, use_joy);
@@ -116,16 +122,21 @@ void TeleopHumans::HumansCallback(const humans_msgs::HumanArray::ConstPtr & Huma
 
 void TeleopHumans::controllerPathsCB(const hanp_msgs::HumanTrajectoryArrayConstPtr traj_array)
 {
+  // if(count<1){
+    // std::cout << "I am in the cb" << '\n';
+    external_trajs_ = traj_array;
+    last_trajs_ = *external_trajs_;
+  // }
+  // count++;
   got_external_trajs =  true;
-  external_trajs_ = traj_array;
-  last_trajs_ = *external_trajs_;
   start_=true;
-  goal_reached_=false;
+  // goal_reached_=false;
 }
 
 void TeleopHumans::globalPlannerPathsCB(const hanp_msgs::HumanPathArrayConstPtr path_array){
   global_paths_ = *path_array;
   global_goal = global_paths_.paths.back().path.poses.back();
+  start_=true;
 }
 
 void TeleopHumans::getVelocity(geometry_msgs::Twist &twist){
@@ -158,8 +169,8 @@ void TeleopHumans::getVelocity(geometry_msgs::Twist &twist){
 
   auto pose = global_paths_.paths.back().path.poses[index].pose;
 
-  twist.linear.x = -(pose.position.x-human.pose.position.x);
-  twist.linear.y = -(pose.position.y-human.pose.position.y);
+  twist.linear.x = (pose.position.x-human.pose.position.x);
+  twist.linear.y = (pose.position.y-human.pose.position.y);
   twist.angular.z = angles::shortest_angular_distance(tf::getYaw(human.pose.orientation),tf::getYaw(pose.orientation));
 
   // std::cout <<"velx " << twist.linear.x <<"vely "<<twist.linear.y << "velz "<<twist.angular.z <<'\n';
@@ -191,101 +202,158 @@ double TeleopHumans::normalize_theta(double theta)
    return theta;
  }
 
- void TeleopHumans::controller(const ros::TimerEvent& event){
+ geometry_msgs::Twist TeleopHumans::get_velocity_human(geometry_msgs::Pose pose, geometry_msgs::Pose h_pose){
+    double theta = tf::getYaw(h_pose.orientation);
+    geometry_msgs::Twist velocity;
 
+
+    velocity.linear.x = 5*((pose.position.x-h_pose.position.x)*std::cos(theta)+(pose.position.x-h_pose.position.x)*std::sin(theta));
+    velocity.linear.y = 5*((pose.position.y-h_pose.position.y)*std::sin(theta)+(pose.position.y-h_pose.position.y)*std::cos(theta));
+    velocity.angular.z =  5*angles::shortest_angular_distance(tf::getYaw(h_pose.orientation),tf::getYaw(pose.orientation));
+
+    return velocity;
+
+ }
+
+ void TeleopHumans::controller(const ros::TimerEvent& event){
    int active_id = 1;
    double vel_sum=0;
    double dx;
    double dy;
    double delta_orient;
    if(!use_joy){
-   for(auto & human : humans.humans){
-     active_id = human.id - 1;
-     double vel_x = 0.0;
-     double vel_y = 0.0;
-     double vel_z = 0.0;
-     if(human.active == true){
-     for(auto & traj : last_trajs_.trajectories){
-       dx = global_goal.pose.position.x - human.pose.position.x;
-       dy = global_goal.pose.position.y - human.pose.position.y;
-       delta_orient = normalize_theta(tf::getYaw(global_goal.pose.orientation)-tf::getYaw(human.pose.orientation));
-       // double sum_vel = fabs(traj.trajectory.points[1].velocity.linear.x)+fabs(traj.trajectory.points[1].velocity.linear.y)+fabs(traj.trajectory.points[1].velocity.angular.z);
-       // std::cout << "traj.trajectory.points.size() " <<traj.trajectory.points.size()<< '\n';
-       // std::cout << "goal_reached_ " <<goal_reached_<< '\n';
+     for(auto & human : humans.humans){
+       active_id = human.id - 1;
+       double vel_x = 0.0;
+       double vel_y = 0.0;
+       double vel_z = 0.0;
+       if(human.active == true){
+         // std::cout << "start_ " <<start_ << '\n';
+         if(!start_ && !goal_reached_){
+            for(auto &plan_it : current_plan){
+                dx = global_goal.pose.position.x - human.pose.position.x;
+                dy = global_goal.pose.position.y - human.pose.position.y;
 
-       if((((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.1)||
-              (traj.trajectory.points.begin()==traj.trajectory.points.end())) && !goal_reached_) ){
-          // if((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.1) && !goal_reached_){
-            reset_time=true;
-            got_external_trajs = false;
-            goal_reached_ = true;
-            last_trajs_.trajectories.clear();
-            ROS_INFO("Goal Reached!");
-            twist_array.twist[active_id].angular.z = vel_z;
-            twist_array.twist[active_id].linear.x = vel_x;
-            twist_array.twist[active_id].linear.y = vel_y;
-            index = 0;
-             break;
-           }
+                delta_orient = normalize_theta(tf::getYaw(global_goal.pose.orientation)-tf::getYaw(human.pose.orientation));
+                if((((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.2))&& !goal_reached_) ){
+                     reset_time=true;
+                     got_external_trajs = false;
+                     goal_reached_ = true;
+                     last_trajs_.trajectories.clear();
+                     ROS_INFO("Goal Reached!");
+                     twist_array.twist[active_id].angular.z = vel_z;
+                     twist_array.twist[active_id].linear.x = vel_x;
+                     twist_array.twist[active_id].linear.y = vel_y;
+                     index = 0;
+                      break;
+                    }
+                auto plan = current_plan[1];
 
-         if(goal_reached_){
-           last_trajs_.trajectories.clear();
-           break;
+                geometry_msgs::Twist velocity;
+                velocity = get_velocity_human(plan.pose,human.pose);
+
+                dx = plan.pose.position.x - human.pose.position.x;
+                dy = plan.pose.position.y - human.pose.position.y;
+
+                delta_orient = normalize_theta(tf::getYaw(plan.pose.orientation)-tf::getYaw(human.pose.orientation));
+
+                twist_array.twist[active_id] = velocity;
+                vel_sum=fabs(velocity.linear.x)+fabs(velocity.linear.y)+fabs(velocity.angular.z);
+
+                if(current_plan.size()>1 && ((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <= 0.2))) {
+                  current_plan.erase(current_plan.begin());
+                  std::cout << "current_plan.size() " << current_plan.size()<< '\n';
+                }
+                break;
+            }
          }
-         // if(!start_){
-         //   ros::Duration(0.1).sleep();
-         // }
-         if(traj.trajectory.points.size()>1){
-             vel_x = traj.trajectory.points[1].velocity.linear.x;
-             vel_y = traj.trajectory.points[1].velocity.linear.y;
-             vel_z = traj.trajectory.points[1].velocity.angular.z;
-          }
-          twist_array.twist[active_id].angular.z = vel_z;
-          twist_array.twist[active_id].linear.x = vel_x;
-          twist_array.twist[active_id].linear.y = vel_y;
+         else{
+           for(auto & traj : last_trajs_.trajectories){
+             dx = global_goal.pose.position.x - human.pose.position.x;
+             dy = global_goal.pose.position.y - human.pose.position.y;
+             delta_orient = normalize_theta(tf::getYaw(global_goal.pose.orientation)-tf::getYaw(human.pose.orientation));
+             // double sum_vel = fabs(traj.trajectory.points[1].velocity.linear.x)+fabs(traj.trajectory.points[1].velocity.linear.y)+fabs(traj.trajectory.points[1].velocity.angular.z);
+             // std::cout << "traj.trajectory.points.size() " <<traj.trajectory.points.size()<< '\n';
+             // std::cout << "goal_reached_ " <<goal_reached_<< '\n';
 
-          vel_sum=fabs(vel_x)+fabs(vel_y)+fabs(vel_z);
+             if((((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.2)||
+                    (traj.trajectory.points.begin()==traj.trajectory.points.end())) && !goal_reached_) ){
+                // if((fabs(std::sqrt(dx*dx+dy*dy)) <=0.2 && fabs(delta_orient) <=0.1) && !goal_reached_){
+                  reset_time=true;
+                  got_external_trajs = false;
+                  goal_reached_ = true;
+                  start_=false;
+                  last_trajs_.trajectories.clear();
+                  ROS_INFO("Goal Reached!");
+                  twist_array.twist[active_id].angular.z = vel_z;
+                  twist_array.twist[active_id].linear.x = vel_x;
+                  twist_array.twist[active_id].linear.y = vel_y;
+                  index = 0;
+                   break;
+                 }
+
+               if(goal_reached_){
+                 last_trajs_.trajectories.clear();
+                 break;
+               }
+               // if(!start_){
+               //   ros::Duration(0.1).sleep();
+               // }
+               if(traj.trajectory.points.size()>1){
+                   vel_x = traj.trajectory.points[1].velocity.linear.x;
+                   vel_y = traj.trajectory.points[1].velocity.linear.y;
+                   vel_z = traj.trajectory.points[1].velocity.angular.z;
+                }
+                ctrl_time = traj.trajectory.points[1].time_from_start.toSec()-prev_control_time;
+                prev_control_time = traj.trajectory.points[1].time_from_start.toSec();
+
+                twist_array.twist[active_id].angular.z = vel_z;
+                twist_array.twist[active_id].linear.x = vel_x;
+                twist_array.twist[active_id].linear.y = vel_y;
+
+                vel_sum=fabs(vel_x)+fabs(vel_y)+fabs(vel_z);
 
 
-          if(traj.trajectory.points.begin()==traj.trajectory.points.end())
-          {
-            geometry_msgs::Twist velocity;
-            getVelocity(velocity);
-            twist_array.twist[active_id] = velocity;
-            vel_sum=fabs(velocity.linear.x)+fabs(velocity.linear.y)+fabs(velocity.angular.z);
+                if(traj.trajectory.points.begin()==traj.trajectory.points.end())
+                {
+                  geometry_msgs::Twist velocity;
+                  getVelocity(velocity);
+                  twist_array.twist[active_id] = velocity;
+                  vel_sum=fabs(velocity.linear.x)+fabs(velocity.linear.y)+fabs(velocity.angular.z);
+                }
+                // double dist = std::hypot(traj.trajectory.points[1].transform.translation.x - human.pose.position.x,traj.trajectory.points[1].transform.translation.y - human.pose.position.y);
+                // double rot_dist = normalize_theta(tf::getYaw(human.pose.orientation)-tf::getYaw(traj.trajectory.points[1].transform.rotation));
+                if(traj.trajectory.points.begin()!=traj.trajectory.points.end()){
+                  last_trajs_.trajectories[0].trajectory.points.erase(last_trajs_.trajectories[0].trajectory.points.begin());
+                  break;
+                }
+                break;
+              }
+            }
           }
-          // double dist = std::hypot(traj.trajectory.points[1].transform.translation.x - human.pose.position.x,traj.trajectory.points[1].transform.translation.y - human.pose.position.y);
-          // double rot_dist = normalize_theta(tf::getYaw(human.pose.orientation)-tf::getYaw(traj.trajectory.points[1].transform.rotation));
-          if(traj.trajectory.points.begin()!=traj.trajectory.points.end()){
-            last_trajs_.trajectories[0].trajectory.points.erase(last_trajs_.trajectories[0].trajectory.points.begin());
-            break;
-          }
-        }
      }
-
-   }
    if(!goal_reached_ && vel_sum<0.00001){
      twist_array.twist[active_id].angular.z = 0;
      twist_array.twist[active_id].linear.x = 0.0;
      twist_array.twist[active_id].linear.y = 0;
    }
    if(!joy_){
+
+     ros::Time last = ros::Time::now();
      vel_pub_.publish(twist_array);
+     // ros::Duration(ctrl_time-0.1).sleep();
+     // vel_pub_.publish(twist_array);
+
+     // vel_pub_.publish(twist_array);
      // std::cout << "I am in if" << '\n';
    }
    joy_=false;
  }
- start_=false;
+ // start_=false;
  }
 
- bool TeleopHumans::setGoal(humans_nav::HumansNavGoal::Request &req, humans_nav::HumansNavGoal::Response &res){
-    // std::string message = req.data ? "Goal set" : "Goal not set";
-    // res.success = true;
-    // res.message = message;
-    // goal_reached_ = !req.data;
-    // ROS_INFO("Goal set!");
 
-    //make a service with this: input is (const move_humans::MoveHumansGoalConstPtr &move_humans_goal)
+ bool TeleopHumans::setGoal(humans_nav::HumansNavGoal::Request &req, humans_nav::HumansNavGoal::Response &res){
 
     ROS_DEBUG_NAMED(NODE_NAME, "Received new planning request");
     humans_nav::map_pose starts, goals;
@@ -293,8 +361,14 @@ double TeleopHumans::normalize_theta(double theta)
 
     for (auto & human : humans.humans){
       starts[human.id].pose = human.pose;
+      starts[human.id].header.frame_id = "map";
       goals[human.id] = req.goals[human.id-1].pose;
+      global_goal = req.goals[human.id-1].pose;
     }
+
+    start_=false;
+    goal_reached_ = false;
+    count = 0;
 
     boost::unique_lock<boost::mutex> lock(planner_mutex_);
     planner_starts_ = starts;
@@ -312,7 +386,6 @@ double TeleopHumans::normalize_theta(double theta)
  }
 
  void TeleopHumans::planThread() {
-   // std::cout << "I am in MoveHumans::planThread" << '\n';
    ROS_INFO(NODE_NAME "_plan_thread", "Starting planner thread");
    ros::NodeHandle nh;
    ros::Timer timer;
@@ -325,6 +398,8 @@ double TeleopHumans::normalize_theta(double theta)
        wait_for_wake = false;
      }
      ros::Time start_time = ros::Time::now();
+     auto human = humans.humans[0];
+     planner_starts_[1].pose = human.pose;
      auto planner_starts = planner_starts_;
      auto planner_goals = planner_goals_;
      auto planner_sub_goals = planner_sub_goals_;
@@ -340,7 +415,6 @@ double TeleopHumans::normalize_theta(double theta)
          ROS_ERROR_NAMED(NODE_NAME "_plan_thread",
                          "Planner costmap NULL, unable to create plan");
        } else {
-       }
          bool planning_success = false;
          if (planner_sub_goals.size() > 0) {
            planning_success =
@@ -349,6 +423,7 @@ double TeleopHumans::normalize_theta(double theta)
          } else {
            planning_success = planner_->makePlans(planner_starts, planner_goals,
                                                   *planner_plans_);
+          }
          if (!planning_success) {
            ROS_DEBUG_NAMED(NODE_NAME "_plan_thread",
                            "Planner plugin failed to find plans");
@@ -368,28 +443,19 @@ double TeleopHumans::normalize_theta(double theta)
 
        if (run_planner_) {
 
-        //Accessing the plans
+        for (auto plan_vector_kv : *latest_plans_) {
+          auto human_id = plan_vector_kv.first;
+          auto plan_vector = plan_vector_kv.second;
+          int active_id = 0;
+          auto human = humans.humans[active_id];
 
-        //Connect my controller here
-        // for (auto plan_vector_kv : *controller_plans_) {
-        //   auto human_id = plan_vector_kv.first;
-        //   auto plan_vector = plan_vector_kv.second;
-        //   // ROS_INFO_NAMED(NODE_NAME, "Got %ld plans for %ld human",
-        //   //                plan_vector.size(), human_id);
-        //   if (plan_vector.size() > 0) {
-        //     current_controller_plans_[human_id] = plan_vector.front();
-        //
-        //     move_humans::pose_vector current_plan;
-        //     for (auto &plan : plan_vector) {
-        //       current_plan.insert(current_plan.end(), plan.begin(), plan.end());
-        //     }
-        //     current_planner_plans_[human_id] = current_plan;
-        //     cp_indices_[human_id] = 0;
-        //   }
-        // }
-
-
-         // state_ = move_humans::MoveHumansState::CONTROLLING;
+          // if (plan_vector.size() > 0) {
+          //   current_controller_plans_[human_id] = plan_vector.front();
+            current_plan.clear();
+            for (auto &plan : plan_vector) {
+              current_plan.insert(current_plan.end(), plan.begin(), plan.end());
+            }
+          }
          ROS_DEBUG_NAMED(NODE_NAME, "Changing to CONTROLLING state");
        }
        if (planner_frequency_ <= 0) {
@@ -397,12 +463,8 @@ double TeleopHumans::normalize_theta(double theta)
        }
      }
      else {
-       // if (state_ == move_humans::MoveHumansState::PLANNING) {
-         // ROS_INFO_NAMED(NODE_NAME "_plan_thread",
-                        // "No plans calculated, Stopping");
          run_planner_ = false;
-         // state_ = move_humans::MoveHumansState::IDLE;
-       // }
+
      }
 
      if (planner_frequency_ > 0) {
@@ -420,6 +482,10 @@ double TeleopHumans::normalize_theta(double theta)
 
  void TeleopHumans::wakePlanner(const ros::TimerEvent &event) {
    planner_cond_.notify_one();
+ }
+
+ void TeleopHumans::wake_up(const ros::TimerEvent &event){
+  ROS_INFO("Woke the timer");
  }
 
 

@@ -14,9 +14,12 @@
 #include <global_planner/grid_path.h>
 #include <global_planner/quadratic_calculator.h>
 #include <boost/range/adaptor/reversed.hpp>
+#include <dynamic_reconfigure/DoubleParameter.h>
+#include <dynamic_reconfigure/IntParameter.h>
+#include <dynamic_reconfigure/Reconfigure.h>
+#include <dynamic_reconfigure/Config.h>
 
-PLUGINLIB_EXPORT_CLASS(multigoal_planner::MultiGoalPlanner,
-                       humans_nav::PlannerInterface)
+PLUGINLIB_EXPORT_CLASS(multigoal_planner::MultiGoalPlanner, humans_nav::PlannerInterface)
 
 namespace multigoal_planner {
 MultiGoalPlanner::MultiGoalPlanner()
@@ -103,6 +106,22 @@ void MultiGoalPlanner::reconfigureCB(MultiGoalPlannerConfig &config,
 }
 
 void MultiGoalPlanner::RobotPosCB(geometry_msgs::Pose robot_pos) {
+  // std::cout << "I am in cbrobot" << '\n';
+  //
+  // dynamic_reconfigure::ReconfigureRequest srv_req;
+  // dynamic_reconfigure::ReconfigureResponse srv_resp;
+  // dynamic_reconfigure::DoubleParameter double_param;
+  // dynamic_reconfigure::IntParameter int_param;
+  // dynamic_reconfigure::Config conf;
+  //
+  // int_param.name = "planning_mode";
+  // int_param.value = 0;
+  // conf.ints.push_back(int_param);
+  //
+  // srv_req.config = conf;
+
+  // ros::service::call("/move_base_node/TebLocalPlannerROS/set_parameters", srv_req, srv_resp);
+  // system("rosrun dynamic_reconfigure dynparam set /move_base_node/TebLocalPlannerROS/ weight_viapoint 1.0");
 
   auto xpos = robot_pos.position.x;
   auto ypos = robot_pos.position.y;

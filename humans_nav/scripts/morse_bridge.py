@@ -75,7 +75,7 @@ class HumanMorse(object):
                 human_segment.pose.pose = human.pose
                 human_segment.twist.twist = human.velocity
                 tracked_human = TrackedHuman()
-                tracked_human.track_id = 3
+                tracked_human.track_id = 1
                 tracked_human.segments.append(human_segment)
                 tracked_humans.humans.append(tracked_human)
 

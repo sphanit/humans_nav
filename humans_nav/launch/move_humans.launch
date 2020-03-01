@@ -1,0 +1,48 @@
+<launch>
+  <!-- start map_server with a map -->
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find move_humans_config)/maps/laas_adream.yaml"/>-->
+<!-- <param name="use_sim_time" type="bool" value="true"/> -->
+  <!-- transform between humans_frame and map -->
+  <node pkg="tf" type="static_transform_publisher" name="map_humans_link" args="0 0 0 0 0 0 map humans_frame 20" >
+  <param name="use_sim_time" type="bool" value="true"/>
+  </node>
+
+  <!-- joy node -->
+   <node respawn="true" pkg="joy" type="joy_node" name="human_joy" >
+     <param name="dev" type="string" value="/dev/input/js0" />
+     <param name="deadzone" value="0.22" />
+   </node>
+
+  <!-- Axes -->
+   <param name="control_mode" value="true" type="bool"/>
+   <param name="scale_linear" value="2" type="double"/>
+   <param name="scale_angular" value="2" type="double"/>
+   <param name="planner_frequency" value="10" type="double"/>
+
+   <node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen">
+   <!-- <arg name="num_hum" value="3"> -->
+   </node>
+
+
+  <!-- start humans_nav node with multigoal_planner -->
+  <node pkg="humans_nav" type="humans_nav" name="humans_sim_node" output="screen" required="true">
+    <!-- <remap from="/humans_sim_node/external_human_plans" to="/move_base_node/TebLocalPlannerROS/human_local_trajs"/> -->
+
+    <rosparam file="$(find humans_nav)/config/planner_costmap_params.yaml" command="load" ns="planner_costmap" />
+    <!-- <rosparam file="$(find move_humans_config)/config/controller_costmap_params.yaml" command="load" ns="controller_costmap" /> -->
+
+    <!-- <rosparam file="$(find move_humans_config)/config/humans.yaml" command="load"/> -->
+
+    <rosparam file="$(find humans_nav)/config/multigoal_planner_params.yaml" command="load" ns="/move_humans_node/MultiGoalPlanner"/>
+    <param name="planner" value="multigoal_planner/MultiGoalPlanner"/>
+    <!-- <rosparam file="$(find move_humans_config)/config/teleport_controller_params.yaml" command="load" ns="/move_humans_node/TeleportController"/> -->
+    <!-- <param name="controller" value="teleport_controller/TeleportController"/> -->
+    <!-- <param name="use_sim_time" type="bool" value="true"/> -->
+    <remap from="/humans_sim_node/MultiGoalPlanner/robot_position" to="/move_base_node/TebLocalPlannerROS/Robot_Pose"/>
+  </node>
+
+  <!-- launch rviz if asked -->
+  <arg name="rviz" default="false"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find move_humans_config)/rviz/move_humans.rviz" if="$(arg rviz)"/>
+  <!--<include file="$(find move_humans_config)/launch/rosbridge.launch" unless="$(arg rviz)"/>-->
+</launch>
