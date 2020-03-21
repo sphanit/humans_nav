@@ -81,8 +81,8 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
 
 
   joy_sub_ = nh_.subscribe("joy", 1, &TeleopHumans::JoyCallback, this);
-  external_traj_sub_ = nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_local_trajs", 1, &TeleopHumans::controllerPathsCB, this);
-  global_path_sub_= nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_global_plans", 1, &TeleopHumans::globalPlannerPathsCB, this);
+  external_traj_sub_ = nh_.subscribe("/move_base/TebLocalPlannerROS/human_local_trajs", 1, &TeleopHumans::controllerPathsCB, this);
+  global_path_sub_= nh_.subscribe("/move_base/TebLocalPlannerROS/human_global_plans", 1, &TeleopHumans::globalPlannerPathsCB, this);
 
 
 

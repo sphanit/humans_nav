@@ -19,7 +19,8 @@
    <param name="scale_angular" value="2" type="double"/>
    <param name="planner_frequency" value="10" type="double"/>
 
-   <node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen">
+   <!--node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen"-->
+   <node pkg="humans_nav" type="optitrack_human.py" name="optitrack_human" output="screen">
    <!-- <arg name="num_hum" value="3"> -->
    </node>
 
@@ -38,7 +39,7 @@
     <!-- <rosparam file="$(find move_humans_config)/config/teleport_controller_params.yaml" command="load" ns="/move_humans_node/TeleportController"/> -->
     <!-- <param name="controller" value="teleport_controller/TeleportController"/> -->
     <!-- <param name="use_sim_time" type="bool" value="true"/> -->
-    <remap from="/humans_sim_node/MultiGoalPlanner/robot_position" to="/move_base_node/TebLocalPlannerROS/Robot_Pose"/>
+    <remap from="/humans_sim_node/MultiGoalPlanner/robot_position" to="/move_base/TebLocalPlannerROS/Robot_Pose"/>
   </node>
 
   <!-- launch rviz if asked -->
