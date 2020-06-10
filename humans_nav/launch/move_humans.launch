@@ -19,8 +19,8 @@
    <param name="scale_angular" value="2" type="double"/>
    <param name="planner_frequency" value="10" type="double"/>
 
-   <!--node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen"-->
-   <node pkg="humans_nav" type="optitrack_human.py" name="optitrack_human" output="screen">
+   <node pkg="humans_nav" type="morse_bridge.py" name="morse_bridge" output="screen">
+   <!--node pkg="humans_nav" type="optitrack_human.py" name="optitrack_human" output="screen"-->
    <!-- <arg name="num_hum" value="3"> -->
    </node>
 

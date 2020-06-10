@@ -18,6 +18,9 @@
 #include <hanp_msgs/HumanPathArray.h>
 #include <tf/tf.h>
 #include <std_srvs/SetBool.h>
+#include <std_srvs/Trigger.h>
+#include <std_srvs/TriggerRequest.h>
+#include <std_srvs/TriggerResponse.h>
 
 #include "humans_nav/HumansNavGoal.h"
 #include "humans_nav/types.h"
@@ -63,9 +66,10 @@ private:
   bool dual_mode_,joy_, use_joy;
   bool start_,goal_reached_,reset_time;
   bool got_external_trajs,zeros_published;
+  bool goal_set;
   ros::Publisher vel_pub_;
   ros::Subscriber joy_sub_,hum_sub_,external_traj_sub_, global_path_sub_;
-  ros::ServiceServer set_goal;
+  ros::ServiceServer set_goal, set_goal_call, set_goal_srv_;
   ros::Timer timer,wake_timer;
   ros::Time last_calc_time_;
   int index,last_index;
@@ -88,6 +92,10 @@ private:
   void getVelocity(geometry_msgs::Twist &twist);
 
   bool setGoal(humans_nav::HumansNavGoal::Request &req, humans_nav::HumansNavGoal::Response &res);
+
+  bool setGoal_call(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
+
+  bool set_goal_srv(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res);
 
   void reconfigureCB(HumanConfig &config, uint32_t level);
 

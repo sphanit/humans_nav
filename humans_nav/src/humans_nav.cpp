@@ -67,6 +67,7 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
   planner_frequency_ = 0.0;
   ctrl_time=0.0;
   prev_control_time=0.0;
+  goal_set = false;
 
   hum_sub_ = nh_.subscribe("/humans", 1, &TeleopHumans::HumansCallback, this);
   vel_pub_ = nh_.advertise<humans_msgs::TwistArray>("/humans/cmd_vel", 1);
@@ -74,6 +75,8 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
   timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::controller, this);
   // wake_timer = nh_.createTimer(ros::Duration(0.1), &TeleopHumans::controller, this);
   set_goal = nh_.advertiseService("setGoalHuman", &TeleopHumans::setGoal, this);
+  set_goal_call = nh_.advertiseService("setGoalHuman_call", &TeleopHumans::setGoal_call, this);
+  set_goal_srv_ = nh_.advertiseService("set_goal_srv", &TeleopHumans::set_goal_srv, this);
 
   // nh_.param("use_joy", use_joy, use_joy);
   f = boost::bind(&TeleopHumans::reconfigureCB,this, _1, _2);
@@ -81,8 +84,8 @@ TeleopHumans::TeleopHumans(tf2_ros::Buffer &tf2):
 
 
   joy_sub_ = nh_.subscribe("joy", 1, &TeleopHumans::JoyCallback, this);
-  external_traj_sub_ = nh_.subscribe("/move_base/TebLocalPlannerROS/human_local_trajs", 1, &TeleopHumans::controllerPathsCB, this);
-  global_path_sub_= nh_.subscribe("/move_base/TebLocalPlannerROS/human_global_plans", 1, &TeleopHumans::globalPlannerPathsCB, this);
+  external_traj_sub_ = nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_local_trajs", 1, &TeleopHumans::controllerPathsCB, this);
+  global_path_sub_= nh_.subscribe("/move_base_node/TebLocalPlannerROS/human_global_plans", 1, &TeleopHumans::globalPlannerPathsCB, this);
 
 
 
@@ -239,6 +242,8 @@ double TeleopHumans::normalize_theta(double theta)
                      reset_time=true;
                      got_external_trajs = false;
                      goal_reached_ = true;
+                     goal_set = false;
+                     start_=false;
                      last_trajs_.trajectories.clear();
                      ROS_INFO("Goal Reached!");
                      twist_array.twist[active_id].angular.z = vel_z;
@@ -283,6 +288,7 @@ double TeleopHumans::normalize_theta(double theta)
                   got_external_trajs = false;
                   goal_reached_ = true;
                   start_=false;
+                  goal_set = false;
                   last_trajs_.trajectories.clear();
                   ROS_INFO("Goal Reached!");
                   twist_array.twist[active_id].angular.z = vel_z;
@@ -368,6 +374,7 @@ double TeleopHumans::normalize_theta(double theta)
 
     start_=false;
     goal_reached_ = false;
+    goal_set = true;
     count = 0;
 
     boost::unique_lock<boost::mutex> lock(planner_mutex_);
@@ -383,6 +390,19 @@ double TeleopHumans::normalize_theta(double theta)
     res.success=true;
     res.message="Goal has been set.";
     // const humans_nav::HumansNavGoal &hn_goal = *req;
+ }
+
+ bool TeleopHumans::setGoal_call(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res){
+    res.message = goal_set ? "Goal Set":"Goal not Set";
+    res.success = goal_set;
+    return true;
+ }
+
+ bool TeleopHumans::set_goal_srv(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res){
+    goal_reached_ = false;
+    res.message = !goal_reached_ ? "Goal Set":"Goal not Set";
+    res.success = !goal_reached_;
+    return true;
  }
 
  void TeleopHumans::planThread() {
