@@ -176,6 +176,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
    scripts/morse_bridge.py
+   scripts/optitrack_humans.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
