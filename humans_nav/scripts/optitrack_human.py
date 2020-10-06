@@ -9,6 +9,10 @@ from hanp_msgs.msg import TrackedHumans
 from hanp_msgs.msg import TrackedHuman
 from hanp_msgs.msg import TrackedSegmentType
 from hanp_msgs.msg import TrackedSegment
+from humans_msgs.msg import TwistArray
+from humans_msgs.msg import HumanArray
+from humans_msgs.msg import HumanMarkerStamped
+from humans_msgs.msg import HumanMarker
 
 
 class OptiTrackHuman():
@@ -19,6 +23,7 @@ class OptiTrackHuman():
         self.vel = Twist()
         self.first = True
         self.humans = TrackedHumans()
+        self.uwds_humans = HumanArray()
         
         for i in range(1):
             human_segment = TrackedSegment()
@@ -27,6 +32,10 @@ class OptiTrackHuman():
             tracked_human.track_id = i+1
             tracked_human.segments.append(human_segment)
             self.humans.humans.append(tracked_human)
+
+            humanmarker = HumanMarker()
+            humanmarker.id = i+1
+            self.uwds_humans.humans.append(humanmarker)
 
 
     def OptiTrackCB(self, msg): 
@@ -71,6 +80,10 @@ class OptiTrackHuman():
                     segment.pose.pose = self.pos
                     segment.twist.twist = self.vel
 
+        for human in self.uwds_humans.humans:
+            human.pose = self.pos
+            human.velocity = self.vel
+
         self.publishHumans()
 
     def publishHumans(self):
@@ -79,14 +92,17 @@ class OptiTrackHuman():
             self.humans.header.stamp = rospy.Time.now()
             self.humans.header.frame_id = 'map'
             self.pub.publish(self.humans)
+            self.uwds_pub.publish(self.uwds_humans)
             #print('updated')
             #print(self.humans)
 
     def run_and_publish(self):
         
         rospy.init_node('mocap_humans')
-        rospy.Subscriber('/optitrack/bodies/Rigid_Body_1',or_pose_estimator_state,self.OptiTrackCB)
+        #rospy.Subscriber('/optitrack/bodies/Rigid_Body_1',or_pose_estimator_state,self.OptiTrackCB)
+        rospy.Subscriber('/optitrack/bodies/Helmet_3',or_pose_estimator_state,self.OptiTrackCB)
         self.pub = rospy.Publisher('/tracked_humans', TrackedHumans, queue_size=10)
+        self.uwds_pub = rospy.Publisher('/humans', HumanArray, queue_size=1)
         self.last_time = rospy.Time.now()
         rospy.spin()
 
