@@ -99,8 +99,8 @@ class OptiTrackHuman():
     def run_and_publish(self):
         
         rospy.init_node('mocap_humans')
-        #rospy.Subscriber('/optitrack/bodies/Rigid_Body_1',or_pose_estimator_state,self.OptiTrackCB)
-        rospy.Subscriber('/optitrack/bodies/Helmet_3',or_pose_estimator_state,self.OptiTrackCB)
+        rospy.Subscriber('/optitrack/bodies/Rigid_Body_1',or_pose_estimator_state,self.OptiTrackCB)
+        #rospy.Subscriber('/optitrack/bodies/Helmet_3',or_pose_estimator_state,self.OptiTrackCB)
         self.pub = rospy.Publisher('/tracked_humans', TrackedHumans, queue_size=10)
         self.uwds_pub = rospy.Publisher('/humans', HumanArray, queue_size=1)
         self.last_time = rospy.Time.now()
