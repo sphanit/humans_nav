@@ -1,7 +1,7 @@
 <launch>
   <!-- start map_server with a map -->
-  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find move_humans_config)/maps/laas_adream.yaml"/>-->
-<!-- <param name="use_sim_time" type="bool" value="true"/> -->
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find move_humans_config)/maps/laas_adream_orig.yaml"/> -->
+  <!-- <param name="use_sim_time" type="bool" value="true"/> -->
   <!-- transform between humans_frame and map -->
   <node pkg="tf" type="static_transform_publisher" name="map_humans_link" args="0 0 0 0 0 0 map humans_frame 20" >
   <param name="use_sim_time" type="bool" value="true"/>

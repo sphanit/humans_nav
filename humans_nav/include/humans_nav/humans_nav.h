@@ -89,7 +89,7 @@ private:
 
   void HumansCallback(const humans_msgs::HumanArray::ConstPtr & Humans);
 
-  void getVelocity(geometry_msgs::Twist &twist);
+  void getVelocity(geometry_msgs::Twist &twist, int id);
 
   bool setGoal(humans_nav::HumansNavGoal::Request &req, humans_nav::HumansNavGoal::Response &res);
 

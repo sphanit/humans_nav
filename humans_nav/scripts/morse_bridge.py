@@ -58,10 +58,10 @@ class HumanMorse(object):
         self.hum_cmd_vel = msg
         active_human = 0
         for human in self.humans.humans:
-            if(human.active):
-                active_human = human.id -1
+            # if(human.active):
+            active_human = human.id -1
                 # print(active_human)
-        self.hum_pub[active_human].publish(self.hum_cmd_vel.twist[active_human])
+            self.hum_pub[active_human].publish(self.hum_cmd_vel.twist[active_human])
 
     def HumansCB(self,*msg):
         tracked_humans = TrackedHumans()
@@ -69,15 +69,25 @@ class HumanMorse(object):
         for human in self.humans.humans:
             human.pose = msg[human.id-1].human.pose
             human.velocity = msg[human.id-1].human.velocity
-            if human.active:
-                human_segment = TrackedSegment()
-                human_segment.type = self.Segment_Type
-                human_segment.pose.pose = human.pose
-                human_segment.twist.twist = human.velocity
-                tracked_human = TrackedHuman()
-                tracked_human.track_id = 1
-                tracked_human.segments.append(human_segment)
-                tracked_humans.humans.append(tracked_human)
+            # if human.active:
+            #     human_segment = TrackedSegment()
+            #     human_segment.type = self.Segment_Type
+            #     human_segment.pose.pose = human.pose
+            #     human_segment.twist.twist = human.velocity
+            #     tracked_human = TrackedHuman()
+            #     tracked_human.track_id = 1
+            #     tracked_human.segments.append(human_segment)
+            #     tracked_humans.humans.append(tracked_human)
+            # else:
+            human_segment = TrackedSegment()
+            human_segment.type = self.Segment_Type
+            human_segment.pose.pose = human.pose
+            human_segment.twist.twist = human.velocity
+            tracked_human = TrackedHuman()
+            tracked_human.track_id = human.id
+            tracked_human.segments.append(human_segment)
+            tracked_humans.humans.append(tracked_human)
+
 
         if(tracked_humans.humans):
             tracked_humans.header.stamp = rospy.Time.now()
@@ -97,5 +107,5 @@ class HumanMorse(object):
 
 
 if __name__ == '__main__':
-    human_morse = HumanMorse(num_hum=1)
+    human_morse = HumanMorse(num_hum=3)
     human_morse.HumanMorsePub()
